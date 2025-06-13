@@ -4,12 +4,29 @@
     <title>Random colour</title>
     <style>
       body {
-        background-color: rgb(50%, 50%, 50%);
+        background-color: rgb(127, 127, 127);
         height: 100vh;
         margin: 0;
       }
     </style>
+    <script>
+      function randomRgbComponent() {
+        return Math.floor(Math.random() * 256);
+      }
+
+      function randomRgb() {
+        return [...Array(3)].map(randomRgbComponent);
+      }
+
+      function styleFromRgb(rgb) {
+        return `rgb(${rgb.join(", ")})`;
+      }
+
+      function changeColour() {
+        document.body.style.backgroundColor = styleFromRgb(randomRgb());
+      }
+    </script>
   </head>
-  <body></body>
+  <body onclick="changeColour()"></body>
 </html>
 
