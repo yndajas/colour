@@ -5,6 +5,7 @@
     <style>
       body {
         background-color: rgb(127, 127, 127);
+        color: rgb(0, 0, 0);
         height: 100vh;
         margin: 0;
       }
@@ -22,11 +23,38 @@
         return `rgb(${rgb.join(", ")})`;
       }
 
+      function luminance(rgb) {
+        const [rLuminance, gLuminance, bLuminance] = rgb.map((component) => {
+          const sRgbComponent = component / 255.0;
+          return sRgbComponent <= 0.04045
+            ? sRgbComponent / 12.92
+            : Math.pow((sRgbComponent + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * rLuminance + 0.7152 * gLuminance + 0.0722 * bLuminance;
+      }
+
+      function maxContrastRgb(rgb) {
+        const rgbLuminance = luminance(rgb);
+        const blackLuminance = 0.0;
+        const whiteLuminance = 1.0;
+
+        const blackContrast = (rgbLuminance + 0.05) / (blackLuminance + 0.05);
+        const whiteContrast = (whiteLuminance + 0.05) / (rgbLuminance + 0.05);
+
+        return blackContrast > whiteContrast ? [0, 0, 0] : [255, 255, 255];
+      }
+
       function changeColour() {
-        document.body.style.backgroundColor = styleFromRgb(randomRgb());
+        const backgroundRgb = randomRgb();
+        document.body.style.backgroundColor = styleFromRgb(backgroundRgb);
+        document.body.style.color = styleFromRgb(maxContrastRgb(backgroundRgb));
+        document.querySelector("p").innerText =
+          document.body.style.backgroundColor;
       }
     </script>
   </head>
-  <body onclick="changeColour()"></body>
+  <body onclick="changeColour()">
+    <p>rgb(127, 127, 127)</p>
+  </body>
 </html>
 
