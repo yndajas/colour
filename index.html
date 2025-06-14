@@ -177,25 +177,24 @@
         }
       });
 
-      for (const { start, end } of [
-        { start: "mousedown", end: "mouseup" },
-        { start: "touchstart", end: "touchend" },
-      ]) {
-        document.addEventListener(start, function (event) {
-          changeColour(event);
-          const timeout = setTimeout(function () {
-            const interval = setInterval(function () {
-              changeColour(event);
-            }, 100);
-            document.addEventListener(end, function (event) {
-              clearInterval(interval);
-            });
-          }, 400);
-          document.addEventListener(end, function (event) {
-            clearTimeout(timeout);
-          });
-        });
-      }
+      let interval, timeout;
+
+      document.addEventListener("pointerdown", function (event) {
+        changeColour(event);
+        timeout = setTimeout(function () {
+          interval = setInterval(function () {
+            changeColour(event);
+          }, 100);
+        }, 400);
+      });
+
+      document.addEventListener("pointerup", function (_event) {
+        clearInterval(interval);
+      });
+
+      document.addEventListener("pointerup", function (_event) {
+        clearTimeout(timeout);
+      });
     </script>
   </body>
 </html>
