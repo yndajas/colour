@@ -147,7 +147,7 @@
       }
     </script>
   </head>
-  <body onclick="changeColour(event)">
+  <body>
     <main>
       <div id="rgb">
         <p>rgb(242, 190, 209)</p>
@@ -160,7 +160,7 @@
     </main>
     <footer>
       <p>click (almost) anywhere or press space to randomise</p>
-      <p>(hold space to party)</p>
+      <p>(hold to party)</p>
     </footer>
     <script>
       updateFavicon("rgb(242, 190, 209");
@@ -170,6 +170,21 @@
           changeColour(event);
         }
       });
+
+      for (const { start, end } of [
+        { start: "mousedown", end: "mouseup" },
+        { start: "touchstart", end: "touchend" },
+      ]) {
+        document.addEventListener(start, function (event) {
+          changeColour(event);
+          const interval = setInterval(function () {
+            changeColour(event);
+          }, 100);
+          document.addEventListener(end, function (event) {
+            clearInterval(interval);
+          });
+        });
+      }
     </script>
   </body>
 </html>
