@@ -67,6 +67,23 @@
         margin-bottom: 0.5rem;
       }
 
+      .mouse_and_keyboard,
+      .touch {
+        display: none;
+      }
+
+      @media (any-pointer: coarse) {
+        .touch {
+          display: unset;
+        }
+      }
+
+      @media (any-pointer: fine) {
+        .mouse_and_keyboard {
+          display: unset;
+        }
+      }
+
       a {
         color: inherit;
       }
@@ -163,7 +180,10 @@
       </div>
     </main>
     <footer>
-      <p>click (almost) anywhere or press space to randomise</p>
+      <p class="mouse_and_keyboard">
+        click (almost) anywhere or press space to randomise
+      </p>
+      <p class="touch">tap (almost) anywhere to randomise</p>
       <p>(hold to party)</p>
       <p>~</p>
       <p><a href="https://github.com/yndajas/colour">source code</a></p>
