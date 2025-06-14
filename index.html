@@ -39,14 +39,25 @@
         line-height: 1.5rem;
       }
 
+      main p {
+        font-size: 1.5rem;
+      }
+
       p {
         cursor: default;
-        font-size: 1.5rem;
         margin: 0;
       }
 
       footer {
         flex: 0.1;
+      }
+
+      footer p {
+        text-align: center;
+      }
+
+      footer p:not(:last-child) {
+        margin-bottom: 0.5rem;
       }
     </style>
     <script>
@@ -120,8 +131,16 @@
       </div>
     </main>
     <footer>
-      click (almost) anywhere to randomise
+      <p>click (almost) anywhere or press space to randomise</p>
+      <p>(hold space to party)</p>
     </footer>
+    <script>
+      document.addEventListener("keydown", function (event) {
+        if (event.code === "Space") {
+          changeColour(event);
+        }
+      });
+    </script>
   </body>
 </html>
 
