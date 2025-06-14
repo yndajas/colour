@@ -15,6 +15,11 @@
 
       p {
         font-size: 2rem;
+        margin: 0;
+      }
+
+      p:not(:last-child) {
+        margin-bottom: 1rem;
       }
     </style>
     <script>
@@ -28,6 +33,13 @@
 
       function styleFromRgb(rgb) {
         return `rgb(${rgb.join(", ")})`;
+      }
+
+      function hexStyleFromRgb(rgb) {
+        const hexComponents = rgb.map((component) =>
+          component.toString(16).padStart(2, "0"),
+        );
+        return `#${hexComponents.join("")}`;
       }
 
       function luminance(rgb) {
@@ -55,13 +67,18 @@
         const backgroundRgb = randomRgb();
         document.body.style.backgroundColor = styleFromRgb(backgroundRgb);
         document.body.style.color = styleFromRgb(maxContrastRgb(backgroundRgb));
-        document.querySelector("p").innerText =
-          document.body.style.backgroundColor;
+        document.getElementById("rgb-code").innerText =
+          styleFromRgb(backgroundRgb);
+        document.getElementById("hex-code").innerText =
+          hexStyleFromRgb(backgroundRgb);
       }
     </script>
   </head>
   <body onclick="changeColour()">
-    <p>rgb(127, 127, 127)</p>
+    <main>
+      <p id="rgb-code">rgb(127, 127, 127)</p>
+      <p id="hex-code">#7f7f7f</p>
+    </main>
   </body>
 </html>
 
