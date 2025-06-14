@@ -11,15 +11,33 @@
         height: 100vh;
         justify-content: center;
         margin: 0;
+        user-select: none;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      div {
+        align-items: center;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      div:not(:last-child) {
+        margin-bottom: 1.5rem;
+      }
+
+      button {
+        font-size: 1rem;
+        line-height: 1.5rem;
       }
 
       p {
-        font-size: 2rem;
+        cursor: default;
+        font-size: 1.5rem;
         margin: 0;
-      }
-
-      p:not(:last-child) {
-        margin-bottom: 1rem;
       }
     </style>
     <script>
@@ -63,21 +81,34 @@
         return blackContrast > whiteContrast ? [0, 0, 0] : [255, 255, 255];
       }
 
-      function changeColour() {
+      function changeColour(event) {
+        if (event.target.nodeName === "BUTTON") return;
+
         const backgroundRgb = randomRgb();
         document.body.style.backgroundColor = styleFromRgb(backgroundRgb);
         document.body.style.color = styleFromRgb(maxContrastRgb(backgroundRgb));
-        document.getElementById("rgb-code").innerText =
+        document.querySelector("#rgb p").innerText =
           styleFromRgb(backgroundRgb);
-        document.getElementById("hex-code").innerText =
+        document.querySelector("#hex p").innerText =
           hexStyleFromRgb(backgroundRgb);
+      }
+
+      function copyCode(event) {
+        const code = event.target.parentNode.querySelector("p").innerText;
+        navigator.clipboard.writeText(code);
       }
     </script>
   </head>
-  <body onclick="changeColour()">
+  <body onclick="changeColour(event)">
     <main>
-      <p id="rgb-code">rgb(127, 127, 127)</p>
-      <p id="hex-code">#7f7f7f</p>
+      <div id="rgb">
+        <p>rgb(127, 127, 127)</p>
+        <button onclick="copyCode(event)">copy RGB</button>
+      </div>
+      <div id="hex">
+        <p>#7f7f7f</p>
+        <button onclick="copyCode(event)">copy hex</button>
+      </div>
     </main>
   </body>
 </html>
