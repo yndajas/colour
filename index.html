@@ -149,6 +149,11 @@
         document.querySelector("head").appendChild(linkMetaTag);
       }
 
+      function updateQueryParam(backgroundRgb) {
+        const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?colour=${backgroundRgb.join(",")}`;
+        window.history.pushState({ path: newUrl }, "", newUrl);
+      }
+
       function changeColour(event = undefined, backgroundRgb = undefined) {
         if (event?.target.nodeName === "BUTTON") return;
 
@@ -161,6 +166,7 @@
         document.querySelector("#hex p").innerText =
           hexStyleFromRgb(backgroundRgb);
         updateFavicon(backgroundRgbStyle);
+        updateQueryParam(backgroundRgb);
       }
 
       function copyCode(event) {
