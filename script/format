@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+echo "==> Formatting index.html with Prettier"
+
+npx prettier index.html --write
+
