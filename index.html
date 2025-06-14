@@ -155,7 +155,7 @@
       }
 
       function changeColour(event = undefined, backgroundRgb = undefined) {
-        if (event?.target.nodeName === "BUTTON") return;
+        if (["A", "BUTTON"].includes(event?.target.nodeName)) return;
 
         backgroundRgb ||= randomRgb();
         const backgroundRgbStyle = styleFromRgb(backgroundRgb);
