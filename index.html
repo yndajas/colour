@@ -108,16 +108,37 @@
         return blackContrast > whiteContrast ? [0, 0, 0] : [255, 255, 255];
       }
 
+      function updateFavicon(rgbStyle) {
+        const favicon = new Image();
+        favicon.src = "";
+        const canvas = document.createElement("canvas");
+        canvas.width = 32;
+        canvas.height = 32;
+        const context = canvas.getContext("2d");
+        context.drawImage(favicon, 0, 0);
+        context.fillStyle = rgbStyle;
+        context.fillRect(0, 0, 32, 32);
+        const linkMetaTag =
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement("link");
+        linkMetaTag.type = "image/x-icon";
+        linkMetaTag.rel = "shortcut icon";
+        linkMetaTag.href = canvas.toDataURL("image/x-icon");
+        document.querySelector("head").appendChild(linkMetaTag);
+      }
+
       function changeColour(event) {
         if (event.target.nodeName === "BUTTON") return;
 
         const backgroundRgb = randomRgb();
-        document.body.style.backgroundColor = styleFromRgb(backgroundRgb);
-        document.body.style.color = styleFromRgb(maxContrastRgb(backgroundRgb));
-        document.querySelector("#rgb p").innerText =
-          styleFromRgb(backgroundRgb);
+        const backgroundRgbStyle = styleFromRgb(backgroundRgb);
+        const maxContrastRgbStyle = styleFromRgb(maxContrastRgb(backgroundRgb));
+        document.body.style.backgroundColor = backgroundRgbStyle;
+        document.body.style.color = maxContrastRgbStyle;
+        document.querySelector("#rgb p").innerText = backgroundRgbStyle;
         document.querySelector("#hex p").innerText =
           hexStyleFromRgb(backgroundRgb);
+        updateFavicon(backgroundRgbStyle);
       }
 
       function copyCode(event) {
@@ -142,6 +163,8 @@
       <p>(hold space to party)</p>
     </footer>
     <script>
+      updateFavicon("rgb(242, 190, 209");
+
       document.addEventListener("keydown", function (event) {
         if (event.code === "Space") {
           changeColour(event);
