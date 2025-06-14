@@ -200,6 +200,7 @@
       let interval, timeout;
 
       document.addEventListener("pointerdown", function (event) {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
         changeColour(event);
         timeout = setTimeout(function () {
           interval = setInterval(function () {
