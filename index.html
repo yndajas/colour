@@ -183,11 +183,16 @@
       ]) {
         document.addEventListener(start, function (event) {
           changeColour(event);
-          const interval = setInterval(function () {
-            changeColour(event);
-          }, 100);
+          const timeout = setTimeout(function () {
+            const interval = setInterval(function () {
+              changeColour(event);
+            }, 100);
+            document.addEventListener(end, function (event) {
+              clearInterval(interval);
+            });
+          }, 400);
           document.addEventListener(end, function (event) {
-            clearInterval(interval);
+            clearTimeout(timeout);
           });
         });
       }
