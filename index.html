@@ -149,10 +149,10 @@
         document.querySelector("head").appendChild(linkMetaTag);
       }
 
-      function changeColour(event) {
-        if (event.target.nodeName === "BUTTON") return;
+      function changeColour(event = undefined, backgroundRgb = undefined) {
+        if (event?.target.nodeName === "BUTTON") return;
 
-        const backgroundRgb = randomRgb();
+        backgroundRgb ||= randomRgb();
         const backgroundRgbStyle = styleFromRgb(backgroundRgb);
         const maxContrastRgbStyle = styleFromRgb(maxContrastRgb(backgroundRgb));
         document.body.style.backgroundColor = backgroundRgbStyle;
@@ -166,6 +166,13 @@
       function copyCode(event) {
         const code = event.target.parentNode.querySelector("p").innerText;
         navigator.clipboard.writeText(code);
+      }
+
+      function colourParamIsValid(colourParam) {
+        if (!/\d{1,3},\d{1,3},\d{1,3}/.test(colourParam)) return false;
+        return colourParam
+          ?.split(",")
+          .every((component) => Number.parseInt(component, 10) <= 255);
       }
     </script>
   </head>
@@ -190,7 +197,16 @@
       <p><a href="https://github.com/yndajas/colour">source code</a></p>
     </footer>
     <script>
-      updateFavicon("rgb(242, 190, 209");
+      const colourParam = new URLSearchParams(window.location.search).get(
+        "colour",
+      );
+
+      if (colourParamIsValid(colourParam)) {
+        const colourParamRgb = colourParam
+          .split(",")
+          .map((component) => Number.parseInt(component, 10));
+        changeColour(undefined, colourParamRgb);
+      } else updateFavicon("rgb(242, 190, 209");
 
       document.addEventListener("keydown", function (event) {
         if (event.code === "Space") {
