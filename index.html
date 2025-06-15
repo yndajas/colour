@@ -9,188 +9,17 @@
 
     <title>colour colour colour</title>
 
-    <style>
-      body {
-        align-items: center;
-        background-color: rgb(242, 190, 209);
-        color: rgb(0, 0, 0);
-        display: flex;
-        flex-direction: column;
-        height: 100dvh;
-        justify-content: center;
-        margin: 0;
-        user-select: none;
-        -webkit-user-select: none;
-      }
-
-      main {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        justify-content: center;
-        padding: 1rem;
-      }
-
-      div {
-        align-items: center;
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-      }
-
-      div:not(:last-child) {
-        margin-bottom: 1.5rem;
-      }
-
-      button {
-        font-size: 1rem;
-        line-height: 1.5rem;
-      }
-
-      main p {
-        font-size: 1.5rem;
-      }
-
-      p {
-        cursor: default;
-        margin: 0;
-      }
-
-      footer {
-        flex: 0.2;
-      }
-
-      footer p {
-        text-align: center;
-      }
-
-      footer p:not(:last-child) {
-        margin-bottom: 0.5rem;
-      }
-
-      .mouse_and_keyboard,
-      .touch {
-        display: none;
-      }
-
-      @media (any-pointer: coarse) {
-        .touch {
-          display: revert;
-        }
-      }
-
-      @media (any-pointer: fine) {
-        .mouse_and_keyboard {
-          display: revert;
-        }
-      }
-
-      a {
-        color: inherit;
-      }
-    </style>
-    <script>
-      function randomRgbComponent() {
-        return Math.floor(Math.random() * 256);
-      }
-
-      function randomRgb() {
-        return [...Array(3)].map(randomRgbComponent);
-      }
-
-      function styleFromRgb(rgb) {
-        return `rgb(${rgb.join(", ")})`;
-      }
-
-      function hexStyleFromRgb(rgb) {
-        const hexComponents = rgb.map((component) =>
-          component.toString(16).padStart(2, "0"),
-        );
-        return `#${hexComponents.join("")}`;
-      }
-
-      function luminance(rgb) {
-        const [rLuminance, gLuminance, bLuminance] = rgb.map((component) => {
-          const sRgbComponent = component / 255.0;
-          return sRgbComponent <= 0.04045
-            ? sRgbComponent / 12.92
-            : Math.pow((sRgbComponent + 0.055) / 1.055, 2.4);
-        });
-        return 0.2126 * rLuminance + 0.7152 * gLuminance + 0.0722 * bLuminance;
-      }
-
-      function maxContrastRgb(rgb) {
-        const rgbLuminance = luminance(rgb);
-        const blackLuminance = 0.0;
-        const whiteLuminance = 1.0;
-
-        const blackContrast = (rgbLuminance + 0.05) / (blackLuminance + 0.05);
-        const whiteContrast = (whiteLuminance + 0.05) / (rgbLuminance + 0.05);
-
-        return blackContrast > whiteContrast ? [0, 0, 0] : [255, 255, 255];
-      }
-
-      function updateFavicon(rgbStyle) {
-        const favicon = new Image();
-        favicon.src = "";
-        const canvas = document.createElement("canvas");
-        canvas.width = 32;
-        canvas.height = 32;
-        const context = canvas.getContext("2d");
-        context.drawImage(favicon, 0, 0);
-        context.fillStyle = rgbStyle;
-        context.fillRect(0, 0, 32, 32);
-        const linkMetaTag =
-          document.querySelector("link[rel*='icon']") ||
-          document.createElement("link");
-        linkMetaTag.type = "image/x-icon";
-        linkMetaTag.rel = "shortcut icon";
-        linkMetaTag.href = canvas.toDataURL("image/x-icon");
-        document.querySelector("head").appendChild(linkMetaTag);
-      }
-
-      function updateQueryParam(backgroundRgb) {
-        const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?colour=${backgroundRgb.join(",")}`;
-        window.history.pushState({ path: newUrl }, "", newUrl);
-      }
-
-      function changeColour(event = undefined, backgroundRgb = undefined) {
-        if (["A", "BUTTON"].includes(event?.target.nodeName)) return;
-
-        backgroundRgb ||= randomRgb();
-        const backgroundRgbStyle = styleFromRgb(backgroundRgb);
-        const maxContrastRgbStyle = styleFromRgb(maxContrastRgb(backgroundRgb));
-        document.body.style.backgroundColor = backgroundRgbStyle;
-        document.body.style.color = maxContrastRgbStyle;
-        document.querySelector("#rgb p").innerText = backgroundRgbStyle;
-        document.querySelector("#hex p").innerText =
-          hexStyleFromRgb(backgroundRgb);
-        updateFavicon(backgroundRgbStyle);
-        updateQueryParam(backgroundRgb);
-      }
-
-      function copyCode(event) {
-        const code = event.target.parentNode.querySelector("p").innerText;
-        navigator.clipboard.writeText(code);
-      }
-
-      function colourParamIsValid(colourParam) {
-        if (!/\d{1,3},\d{1,3},\d{1,3}/.test(colourParam)) return false;
-        return colourParam
-          ?.split(",")
-          .every((component) => Number.parseInt(component, 10) <= 255);
-      }
-    </script>
+    <link rel="stylesheet" href="./assets/styles/main.css" />
   </head>
   <body>
     <main>
       <div id="rgb">
         <p>rgb(242, 190, 209)</p>
-        <button onclick="copyCode(event)">copy RGB</button>
+        <button>copy RGB</button>
       </div>
       <div id="hex">
         <p>#f2bed1</p>
-        <button onclick="copyCode(event)">copy hex</button>
+        <button>copy hex</button>
       </div>
     </main>
     <footer>
@@ -202,16 +31,24 @@
       <p>~</p>
       <p><a href="https://github.com/yndajas/colour">source code</a></p>
     </footer>
-    <script>
-      const colourParam = new URLSearchParams(window.location.search).get(
+    <script type="module">
+      import {
+        changeColour,
+        copyCode,
+        queryParamIsValid,
+        updateFavicon,
+      } from "./assets/scripts/functions.js";
+      import Rgb from "./assets/scripts/rgb.js";
+
+      const queryParam = new URLSearchParams(window.location.search).get(
         "colour",
       );
 
-      if (colourParamIsValid(colourParam)) {
-        const colourParamRgb = colourParam
+      if (queryParamIsValid(queryParam)) {
+        const [red, green, blue] = queryParam
           .split(",")
           .map((component) => Number.parseInt(component, 10));
-        changeColour(undefined, colourParamRgb);
+        changeColour(undefined, new Rgb(red, green, blue));
       } else updateFavicon("rgb(242, 190, 209");
 
       document.addEventListener("keydown", function (event) {
@@ -236,6 +73,12 @@
 
       document.addEventListener("pointerup", function (_event) {
         clearTimeout(timeout);
+      });
+
+      Array.from(document.querySelectorAll("button")).forEach((button) => {
+        button.addEventListener("click", function (_event) {
+          copyCode(button);
+        });
       });
     </script>
   </body>

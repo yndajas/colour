@@ -2,5 +2,4 @@
 
 echo "==> Formatting index.html with Prettier"
 
-npx prettier index.html --write
-
+npx prettier ./index.html ./assets/**/*.{css,js} --write

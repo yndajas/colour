@@ -1,0 +1,78 @@
+body {
+  align-items: center;
+  background-color: rgb(242, 190, 209);
+  color: rgb(0, 0, 0);
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  justify-content: center;
+  margin: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+}
+
+div {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+div:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+button {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+main p {
+  font-size: 1.5rem;
+}
+
+p {
+  cursor: default;
+  margin: 0;
+}
+
+footer {
+  flex: 0.2;
+}
+
+footer p {
+  text-align: center;
+}
+
+footer p:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+.mouse_and_keyboard,
+.touch {
+  display: none;
+}
+
+@media (any-pointer: coarse) {
+  .touch {
+    display: revert;
+  }
+}
+
+@media (any-pointer: fine) {
+  .mouse_and_keyboard {
+    display: revert;
+  }
+}
+
+a {
+  color: inherit;
+}
