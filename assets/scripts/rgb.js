@@ -1,4 +1,5 @@
 export default class Rgb {
+  static #_colourKeywords;
   #red;
   #green;
   #blue;
@@ -31,6 +32,17 @@ export default class Rgb {
   }
 
   /**
+   * @returns {Object.<string,string[]>} An object mapping decimal \<color\>
+   * values to an array of matching colour keywords.
+   */
+  static async #colourKeywords() {
+    this.#_colourKeywords ||= await fetch(
+      "./assets/data/colourKeywords.json",
+    ).then((response) => response.json());
+    return this.#_colourKeywords;
+  }
+
+  /**
    * @param {string} [format=decimal] The format of the \<color\> value -
    * decimal or hexadecimal.
    * @returns {string} A CSS \<color\> value for the Rgb in the given format.
@@ -51,6 +63,14 @@ export default class Rgb {
         }
         return this.#_cssColorValues.hexadecimal;
     }
+  }
+
+  /**
+   * @returns {string[]|undefined} An array of matching colour keywords if they
+   * exist, otherwise undefined.
+   */
+  async colourKeywords() {
+    return (await Rgb.#colourKeywords())[this.cssColorValue()];
   }
 
   /**

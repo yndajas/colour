@@ -12,6 +12,35 @@ function queryParamIsValid(queryParam) {
 }
 
 /**
+ * Updates the displayed colour keywords.
+ * @param {string[]|undefined} newKeywords One or more matching colour keywords
+ * for the new Rgb, if they exist.
+ */
+function updateColourKeywords(newKeywords) {
+  Array.from(document.querySelectorAll(".colour-keyword")).forEach((div) =>
+    div.remove(),
+  );
+  if (newKeywords) {
+    const nodes = newKeywords.map((newKeyword) => {
+      const fragment = document
+        .querySelector("#colour-keyword-template")
+        .content.cloneNode(true);
+      fragment.querySelector("p").innerText = newKeyword;
+      const button = fragment.querySelector("button");
+      button.addEventListener("click", function (_event) {
+        copyCode(button);
+      });
+      if (newKeywords.length > 1) {
+        button.ariaLabel = `copy colour keyword (${newKeyword})`;
+      }
+      document
+        .querySelector("main")
+        .insertBefore(fragment, document.querySelector("#decimal-rgb"));
+    });
+  }
+}
+
+/**
  * Updates the favicon to a square filled using the given Rgb style.
  * @param {string} decimalRgbStyle A CSS \<color\> value to use for the
  * favicon's fill style.
@@ -54,7 +83,7 @@ function updateQueryParam(newQueryParam) {
  * @param {Rgb} [newRgb=undefined] A specific Rgb to use for the new colour. If
  * unspecified, a random Rgb will be generated.
  */
-function changeColour(event = undefined, newRgb = undefined) {
+async function changeColour(event = undefined, newRgb = undefined) {
   if (["A", "BUTTON"].includes(event?.target.nodeName)) return;
 
   newRgb ||= Rgb.random();
@@ -65,6 +94,7 @@ function changeColour(event = undefined, newRgb = undefined) {
     newRgb.cssColorValue("hexadecimal");
   updateFavicon(newRgb.cssColorValue());
   updateQueryParam(newRgb.queryParam());
+  updateColourKeywords(await newRgb.colourKeywords());
 }
 
 /**
