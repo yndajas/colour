@@ -60,8 +60,8 @@ function changeColour(event = undefined, newRgb = undefined) {
   newRgb ||= Rgb.random();
   document.body.style.backgroundColor = newRgb.cssColorValue();
   document.body.style.color = newRgb.maxContrastRgb().cssColorValue();
-  document.querySelector("#rgb p").innerText = newRgb.cssColorValue();
-  document.querySelector("#hex p").innerText =
+  document.querySelector("#decimal-rgb p").innerText = newRgb.cssColorValue();
+  document.querySelector("#hexadecimal-rgb p").innerText =
     newRgb.cssColorValue("hexadecimal");
   updateFavicon(newRgb.cssColorValue());
   updateQueryParam(newRgb.queryParam());
